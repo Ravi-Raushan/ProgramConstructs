@@ -18,6 +18,8 @@ elif [ $num -eq 7 ]
    then  echo Seven;
 elif [ $num -eq 8 ]
    then echo Eight;
+elif [ $num -eq 9 ]
+    then  echo Nine;
 else
-        echo Nine;
+       echo Invalid number;
 fi
