@@ -69,7 +69,7 @@ then
     exit
 fi
 }
-read -p "Enter the order n x n: " n
+n=3
 setBoard
 echo "x for computer and o for User"
 read -p "Let's Start Toss, Enter 1 for Head and 0 for Tail: " input
@@ -81,21 +81,12 @@ do
 if [ $gameStart -eq $input ]
 then
       echo "User turn"
+      input=$(($input^1))
       playUser
 else
-		echo "Computer turn"
-      playComputer
-fi
-count=$(($count-1))
-displayBoard
-checkForWin
-if [ $gameStart -eq $input ]
-then
       echo "Computer turn"
-		playComputer
-else
-      echo "User turn"
-      playUser
+      input=$(($input^1))
+      playComputer
 fi
 count=$(($count-1))
 displayBoard
