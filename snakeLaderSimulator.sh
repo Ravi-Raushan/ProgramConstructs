@@ -1,63 +1,61 @@
-#!/bin/bash -x
+#!/bin/bash 
 echo "*****	WELCOME TO SNAKELADER GAME	*****"
 DESTINATION=100
+CASE_OF_LADDER=1
+CASE_OF_SNAKE=2
+
+resetPosition(){
 player1Position=0
 player2Position=0
-position=0
-count1=0
-count2=0
+noOfTurn=0
+}
 getPosition(){
    previousPosition=$1
-	resultOfDice=$(($((RANDOM%6))+1))
+   resultOfDice=$(($RANDOM%6+1))
    checkForMove=$((RANDOM%3))
-	if [ $checkForMove -eq 0 ]
-	then
-		 position=$previousPosition
-	elif [ $checkForMove -eq 1 ]
-	then
-		  position=$(($previousPosition+$resultOfDice))
-		case $position in
-				19)
-				position=66
-				;;
-				32)
-				position=53
-				;;
-				67)
-				position=100
-				;;
-				73)
-				position=90
-				;;
-		esac
-	elif [ $checkForMove -eq 2 ]
-	then
-		 position=$(($previousPosition+$resultOfDice))
-                case $position in
-                                26)
-                                position=6
-                                ;;
-                                46)
-                                position=12
-                                ;;
-                                74)
-                                position=52
-                                ;;
-                esac
-	fi
+   if [ $checkForMove -eq $CASE_OF_LADDER ]
+   then
+       position=$(($previousPosition+$resultOfDice))
+       if [ $position -gt 100 ]
+       then
+           position=$previousPosition
+       fi
+
+    elif [ $checkForMove -eq $CASE_OF_SNAKE ]
+    then
+	position=$(($previousPosition-$resultOfDice))
+        if [ $position -lt 0 ]
+        then
+            position=0
+        fi
+    else
+        position=$previousPosition
+    fi
 }
+#For one Player
+resetPosition
+echo " NoOfTurn  Position"
+while [ $player1Position -lt $DESTINATION ]
+do
+   getPosition $player1Position
+   player1Position=$position
+   echo " $noOfTurn      $position"
+   ((noOfTurn++))
+done
+#For Two Players
+resetPosition
 while [ $player1Position -lt $DESTINATION ] && [ $player2Position -lt $DESTINATION ]
 do
-	getPosition $player1Position
+   getPosition $player1Position
    player1Position=$position
    getPosition $player2Position
    player2Position=$position
-((count1++))
-((count2++))
+   ((noOfTurn++))
 done
 if [ $player1Position -eq $DESTINATION  ]
 then
-		echo "Player1 is Win and num of turn is $count1"
-else
-		echo "Player2 is Win and num of turn is $count2"
+	echo "Player1 is Win and num of turn is $noOfTurn"
+elif [ $player2Position -eq $DESTINATION  ]
+then
+	echo "Player2 is Win and num of turn is $noOfTurn"
 fi
